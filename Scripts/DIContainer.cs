@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BaCon
 {
-    public class DIContainer
+    public class DIContainer : IDisposable
     {
         private readonly DIContainer _parentContainer;
         private readonly Dictionary<(string, Type), DIEntry> _entriesMap = new();
@@ -85,6 +85,16 @@ namespace BaCon
             } 
             
             throw new Exception($"Couldn't find dependency for tag {tag} and type {key.Item2.FullName}");
+        }
+
+        public void Dispose()
+        {
+            var entries = _entriesMap.Values;
+            
+            foreach (var entry in entries)
+            {
+                entry.Dispose();
+            }
         }
     }
 }
